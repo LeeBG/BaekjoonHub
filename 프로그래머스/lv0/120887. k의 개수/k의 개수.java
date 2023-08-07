@@ -5,12 +5,9 @@ class Solution {
         for(int l = i;l<=j;l++){
             s += l;
         }
+        String t = s.replace(""+k, "");
         
-        for(int t=0;t<s.length();t++){
-            if(s.charAt(t) == (char)(48+k)){
-                answer++;
-            }
-        }
-        return answer;
+        
+        return s.length()-t.length();
     }
 }
