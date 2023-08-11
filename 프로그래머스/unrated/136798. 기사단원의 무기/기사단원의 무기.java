@@ -6,7 +6,6 @@ class Solution {
 		
 		for(int i=0;i<weapons.length;i++) {
 			weapons[i] = measureOfNumber(i+1);
-			System.out.println(weapons[i]);
 		}
 		
 		for(int i=0;i<weapons.length;i++) {
@@ -15,11 +14,9 @@ class Solution {
 			}
 			answer += weapons[i];
 		}
-		
-		System.out.println(answer);
 		return answer;
 	}
-	
+	// 약수의 갯수를 구하는 식
 	public int measureOfNumber(int number) {
 		int count = 0;
 		for(int i=1;i*i<=number;i++) {
