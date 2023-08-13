@@ -1,6 +1,4 @@
 import java.util.ArrayList;
-
-
 class Solution {
     public Integer[] solution(String today, String[] terms, String[] privacies) {
     	
@@ -13,10 +11,6 @@ class Solution {
                     expires[i][0] = Integer.parseInt(privacies[i].split(" ")[0].split("\\.")[0]);
                     expires[i][1] = Integer.parseInt(privacies[i].split(" ")[0].split("\\.")[1])+Integer.parseInt(t.split(" ")[1]);
                     expires[i][2] = Integer.parseInt(privacies[i].split(" ")[0].split("\\.")[2]);
-                     
-                    System.out.println(expires[i][0]);
-                    System.out.println(expires[i][1]);
-                    System.out.println(expires[i][2]);
                     
                     if(expires[i][1] > 12){
                     	int add = expires[i][1]/12;
