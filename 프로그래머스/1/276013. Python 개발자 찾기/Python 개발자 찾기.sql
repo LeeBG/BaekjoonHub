@@ -1,0 +1,5 @@
+-- 파이썬 개발자 찾기
+SELECT ID,EMAIL,FIRST_NAME,LAST_NAME
+FROM DEVELOPER_INFOS
+WHERE SKILL_1='python' or SKILL_2='python' or SKILL_3='python'
+ORDER BY id;
