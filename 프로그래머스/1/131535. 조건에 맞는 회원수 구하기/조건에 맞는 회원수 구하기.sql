@@ -1,0 +1,3 @@
+SELECT COUNT(USER_ID)
+FROM USER_INFO
+WHERE TO_CHAR(JOINED,'yyyy') = '2021' and age between 20 and 29;
