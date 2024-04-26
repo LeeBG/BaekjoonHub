@@ -1,0 +1,7 @@
+SELECT SUM(g.SCORE) as SCORE, e.EMP_NO, e.EMP_NAME, e.POSITION, e.EMAIL
+    FROM HR_EMPLOYEES e, HR_GRADE g
+    WHERE e.EMP_NO = g.EMP_NO
+    GROUP BY e.EMP_NO,e.EMP_NAME,e.POSITION,e.EMAIL
+    order by SCORE desc
+    limit 1;
+
