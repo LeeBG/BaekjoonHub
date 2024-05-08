@@ -1,0 +1,35 @@
+-- SELECT TO_CHAR(SALES_DATE, 'yyyy') as YEAR, TO_NUMBER(TO_CHAR(SALES_DATE,'MM')) as MONTH, i.GENDER as GENDER, COUNT(ONLINE_SALE_ID) as USERS
+-- FROM USER_INFO i
+-- JOIN ONLINE_SALE o
+-- ON i.USER_ID = o.USER_ID
+-- WHERE GENDER IS NOT NULL
+-- GROUP BY TO_CHAR(SALES_DATE, 'yyyy'), TO_CHAR(SALES_DATE,'MM'), GENDER
+-- ORDER BY YEAR,MONTH,GENDER;
+
+
+/*
+USER_INFO(회원정보):**USER_ID, GENDER(0 남자, 1 여자), AGE, JOINED
+ONLINE_SALE(상품판매정보):ONLINE_SALE_ID, USER_ID, PRODUCT_ID, SALES_AMOUNT, SALES_DATE
+동일한 날짜, 회원 ID, 상품 ID 조합에 대해서는 하나의 판매 데이터만 존재
+*/
+
+SELECT  OS.YEAR
+        ,OS.MONTH
+        ,UI.GENDER
+        ,COUNT(DISTINCT UI.USER_ID) AS USERS
+FROM    (--년 월별 고객ID 판매 정보
+            SELECT  USER_ID
+                    ,SUBSTRB(TO_CHAR(SALES_DATE,'YYYYMM'),1,4) AS YEAR
+                    ,TO_NUMBER(SUBSTRB(TO_CHAR(SALES_DATE,'YYYYMM'),5,6)) AS MONTH
+            FROM    ONLINE_SALE
+        ) OS
+        ,(--성별정보가 존재하는 고객정보
+            SELECT  USER_ID
+                    ,GENDER
+            FROM    USER_INFO
+            WHERE   GENDER IS NOT NULL
+        ) UI
+WHERE   UI.USER_ID = OS.USER_ID
+GROUP BY OS.YEAR,OS.MONTH,UI.GENDER
+--년, 월, 성별을 기준으로 오름차순
+ORDER BY OS.YEAR,OS.MONTH,UI.GENDER
