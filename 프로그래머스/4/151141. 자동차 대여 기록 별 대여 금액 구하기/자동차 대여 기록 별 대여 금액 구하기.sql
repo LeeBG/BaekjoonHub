@@ -1,82 +1,31 @@
 SELECT 
     h.HISTORY_ID,
     CASE 
-        WHEN DATEDIFF(h.END_DATE, h.START_DATE)+1 >= 90 THEN 
-            ROUND((DATEDIFF(h.END_DATE, h.START_DATE)+1) * c.DAILY_FEE *
-            (SELECT (100-DISCOUNT_RATE) / 100
+        WHEN h.END_DATE - h.START_DATE + 1 >= 90 THEN 
+            ROUND((h.END_DATE - h.START_DATE + 1) * c.DAILY_FEE *
+            (SELECT (100 - DISCOUNT_RATE) / 100
              FROM CAR_RENTAL_COMPANY_DISCOUNT_PLAN 
-             WHERE CAR_TYPE = '트럭' AND DURATION_TYPE = '90일 이상'))
+             WHERE CAR_TYPE = '트럭' AND DURATION_TYPE = '90일 이상'), 2)
                   
-        WHEN DATEDIFF(h.END_DATE, h.START_DATE)+1 >= 30 THEN 
-            ROUND((DATEDIFF(h.END_DATE, h.START_DATE)+1) * c.DAILY_FEE * 
-            (SELECT (100-DISCOUNT_RATE) / 100
+        WHEN h.END_DATE - h.START_DATE + 1 >= 30 THEN 
+            ROUND((h.END_DATE - h.START_DATE + 1) * c.DAILY_FEE * 
+            (SELECT (100 - DISCOUNT_RATE) / 100
              FROM CAR_RENTAL_COMPANY_DISCOUNT_PLAN 
-             WHERE CAR_TYPE = '트럭' AND DURATION_TYPE = '30일 이상'))
+             WHERE CAR_TYPE = '트럭' AND DURATION_TYPE = '30일 이상'), 2)
                   
-        WHEN DATEDIFF(h.END_DATE , h.START_DATE)+1>= 7 THEN 
-            ROUND((DATEDIFF(h.END_DATE, h.START_DATE)+1) * c.DAILY_FEE *
-            (SELECT (100-DISCOUNT_RATE) / 100
-             FROM  CAR_RENTAL_COMPANY_DISCOUNT_PLAN 
-             WHERE CAR_TYPE = '트럭' AND DURATION_TYPE = '7일 이상'))
+        WHEN h.END_DATE - h.START_DATE + 1 >= 7 THEN 
+            ROUND((h.END_DATE - h.START_DATE + 1) * c.DAILY_FEE *
+            (SELECT (100 - DISCOUNT_RATE) / 100
+             FROM CAR_RENTAL_COMPANY_DISCOUNT_PLAN 
+             WHERE CAR_TYPE = '트럭' AND DURATION_TYPE = '7일 이상'), 2)
         ELSE 
-            c.DAILY_FEE * (DATEDIFF(h.END_DATE, h.START_DATE)+1)
+            c.DAILY_FEE * (h.END_DATE - h.START_DATE + 1)
     END AS FEE
 FROM 
     CAR_RENTAL_COMPANY_CAR c 
 JOIN 
     CAR_RENTAL_COMPANY_RENTAL_HISTORY h ON c.CAR_ID = h.CAR_ID
-JOIN 
-    CAR_RENTAL_COMPANY_DISCOUNT_PLAN p ON c.CAR_TYPE = p.CAR_TYPE
 WHERE 
     c.CAR_TYPE = '트럭'
-GROUP BY h.HISTORY_ID
 ORDER BY 
     FEE DESC, h.HISTORY_ID DESC;
-    
-    
-
-# SELECT 
-#     h.HISTORY_ID,
-#     CASE 
-#         WHEN DATEDIFF(h.END_DATE, h.START_DATE)+1 >= 90 THEN 
-#             (DATEDIFF(h.END_DATE, h.START_DATE)+1) * 
-#             (SELECT ROUND((100 - p1.DISCOUNT_RATE) / 100 * c1.DAILY_FEE)
-#              FROM CAR_RENTAL_COMPANY_CAR c1 
-#              JOIN CAR_RENTAL_COMPANY_DISCOUNT_PLAN p1 
-#              ON c1.CAR_TYPE = p1.CAR_TYPE 
-#              WHERE c1.CAR_TYPE = '트럭' AND p1.DURATION_TYPE = '90일 이상' LIMIT 1)
-#         WHEN DATEDIFF(h.END_DATE, h.START_DATE)+1 >= 30 THEN 
-#             (DATEDIFF(h.END_DATE, h.START_DATE)+1) * 
-#             (SELECT ROUND((100 - p1.DISCOUNT_RATE) / 100 * c1.DAILY_FEE)
-#              FROM CAR_RENTAL_COMPANY_CAR c1 
-#              JOIN CAR_RENTAL_COMPANY_DISCOUNT_PLAN p1 
-#              ON c1.CAR_TYPE = p1.CAR_TYPE 
-#              WHERE c1.CAR_TYPE = '트럭' AND p1.DURATION_TYPE = '30일 이상' LIMIT 1)
-#         WHEN DATEDIFF(h.END_DATE , h.START_DATE)+1>= 7 THEN 
-#             (DATEDIFF(h.END_DATE, h.START_DATE)+1) * 
-#             (SELECT ROUND((100 - p1.DISCOUNT_RATE) / 100 * c1.DAILY_FEE) 
-#              FROM CAR_RENTAL_COMPANY_CAR c1 
-#              JOIN CAR_RENTAL_COMPANY_DISCOUNT_PLAN p1 
-#              ON c1.CAR_TYPE = p1.CAR_TYPE 
-#              WHERE c1.CAR_TYPE = '트럭' AND p1.DURATION_TYPE = '7일 이상' LIMIT 1)
-#         ELSE 
-#             c.DAILY_FEE * (DATEDIFF(h.END_DATE, h.START_DATE)+1)
-#     END AS FEE
-# FROM 
-#     CAR_RENTAL_COMPANY_CAR c 
-# JOIN 
-#     CAR_RENTAL_COMPANY_RENTAL_HISTORY h ON c.CAR_ID = h.CAR_ID
-# JOIN 
-#     CAR_RENTAL_COMPANY_DISCOUNT_PLAN p ON c.CAR_TYPE = p.CAR_TYPE
-# WHERE 
-#     c.CAR_TYPE = '트럭'
-# GROUP BY h.HISTORY_ID
-# ORDER BY 
-#     FEE DESC, h.HISTORY_ID DESC;
-
-# SELECT DAILY_FEE * (DATEDIFF(h.END_DATE,h.START_DATE)+1) as FEE
-# FROM CAR_RENTAL_COMPANY_RENTAL_HISTORY H
-# JOIN CAR_RENTAL_COMPANY_CAR c
-# ON c.CAR_ID = h.CAR_ID
-# WHERE c.CAR_TYPE = '트럭'
-# ORDER BY FEE desc;
