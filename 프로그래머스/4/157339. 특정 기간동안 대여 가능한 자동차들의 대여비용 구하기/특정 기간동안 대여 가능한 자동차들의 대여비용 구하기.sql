@@ -4,11 +4,9 @@ SELECT DISTINCT c.CAR_ID,c.CAR_TYPE, FLOOR(c.DAILY_FEE* 30* (1-p.DISCOUNT_RATE*0
     ON c.CAR_ID = h.CAR_ID
     JOIN CAR_RENTAL_COMPANY_DISCOUNT_PLAN p
     ON c.CAR_TYPE = p.CAR_TYPE
-    WHERE DURATION_TYPE = '30일 이상' and p.CAR_TYPE in ('세단','SUV')
+    WHERE DURATION_TYPE in ('30일 이상') and p.CAR_TYPE in ('세단','SUV')
     and (c.DAILY_FEE* 30* (1-p.DISCOUNT_RATE*0.01)) between 500000 and 2000000 
     and c.CAR_ID not in (SELECT CAR_ID 
                          FROM CAR_RENTAL_COMPANY_RENTAL_HISTORY 
-                         WHERE END_DATE >= TO_DATE('2022-11-01','yyyy-MM-dd'))
+                         WHERE END_DATE >= DATE_FORMAT('2022-11-01','%Y-%m-%d'))
     order by FEE desc, C.CAR_TYPE, c.CAR_ID desc;
-    
-    
